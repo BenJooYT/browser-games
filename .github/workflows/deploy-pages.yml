@@ -37,11 +37,14 @@ jobs:
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
           echo "games/main is $sha"
 
+      - name: Prepare cache marker
+        run: mkdir -p _cache-games-sha
+
       - name: Cache check for games SHA
         uses: actions/cache@v4
         id: gcache
         with:
-          path: /tmp/games-sha
+          path: _cache-games-sha
           key: games-main-${{ steps.games.outputs.sha }}
 
       - name: Skip deploy when games unchanged (scheduled poll)
