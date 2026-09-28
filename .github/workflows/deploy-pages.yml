@@ -1,0 +1,70 @@
+name: Deploy site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: [games-updated]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout site repo
+        uses: actions/checkout@v4
+        with:
+          path: site
+
+      - name: Checkout games repo
+        uses: actions/checkout@v4
+        with:
+          repository: CursedOne0u0/local-browser-games
+          ref: main
+          path: site/_site/games
+
+      - name: Assemble site
+        working-directory: site
+        run: |
+          rm -rf _site/games/.git _site/games/.github
+          cp src/index.html _site/index.html
+          test -f _site/index.html
+          test -f _site/games/local-browser-games/1player/breakout-blast/index.html
+          test -f _site/games/local-browser-games/hybrid1-2/pong-duo/index.html
+
+      - name: Verify every hub link resolves
+        working-directory: site
+        run: |
+          missing=0
+          for u in $(grep -oE '(href|src)="games/[^"]*"' src/index.html | sed -E 's/^(href|src)="//; s/"$//' | sort -u); do
+            if [ ! -f "_site/$u" ]; then
+              echo "MISSING: $u"
+              missing=1
+            fi
+          done
+          test "$missing" -eq 0 || { echo "::error::hub links a file the games repo does not have"; exit 1; }
+          echo "all hub links resolve"
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/_site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
