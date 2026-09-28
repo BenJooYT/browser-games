@@ -27,15 +27,31 @@ src/index.html                  the hub page
 
 <https://benjooyt.github.io/browser-games/>
 
-## Redeploying after a game change
+## Auto-sync with the games repo
 
-Push to the site repo, or dispatch the workflow manually. To rebuild straight from a games
-commit without touching this repo:
+There is no manual step. On a 15-minute schedule this workflow:
+
+1. resolves `CursedOne0u0/local-browser-games` `main` to its commit SHA
+2. asks GitHub Actions cache whether that exact SHA was ever built
+3. if yes — exits, doing nothing
+4. if no — checks out that SHA, assembles the site, deploys, and the
+   successful run caches the SHA
+
+So a push to the games repo is live on the site within 15 minutes, with
+no one touching this repo and no wasted deploys. A failed deploy fails
+the job, so its SHA is never cached and the next tick retries.
+
+## Redeploying immediately
+
+Push to the site repo, or dispatch the workflow manually:
 
 ```bash
 gh api repos/BenJooYT/browser-games/dispatches \
   -f event_type=games-updated
 ```
+
+Dispatch (and `push`/`workflow_dispatch`) always deploy — only the scheduled
+poll skips unchanged SHAs.
 
 `ref: main` in the workflow is the games branch that gets published — pin it to a tag if
 you would rather deploy a specific release.

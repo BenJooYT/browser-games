@@ -6,6 +6,8 @@ on:
   repository_dispatch:
     types: [games-updated]
   workflow_dispatch:
+  schedule:
+    - cron: '*/15 * * * *'
 
 permissions:
   contents: read
@@ -27,6 +29,26 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: site
+
+      - name: Resolve games main SHA
+        id: games
+        run: |
+          sha="$(git ls-remote https://github.com/CursedOne0u0/local-browser-games.git refs/heads/main | cut -f1)"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "games/main is $sha"
+
+      - name: Cache check for games SHA
+        uses: actions/cache@v4
+        id: gcache
+        with:
+          path: /tmp/games-sha
+          key: games-main-${{ steps.games.outputs.sha }}
+
+      - name: Skip deploy when games unchanged (scheduled poll)
+        if: github.event_name == 'schedule' && steps.gcache.outputs.cache-hit == 'true'
+        run: |
+          echo "games/main SHA is already the deployed version; nothing to do"
+          exit 0
 
       - name: Checkout games repo
         uses: actions/checkout@v4
