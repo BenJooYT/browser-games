@@ -69,11 +69,16 @@ jobs:
           test -f _site/games/local-browser-games/1player/breakout-blast/index.html
           test -f _site/games/local-browser-games/hybrid1-2/pong-duo/index.html
 
+      - name: Generate hub cards from game manifests
+        working-directory: site
+        run: |
+          python3 src/build_cards.py _site/games _site/index.html
+
       - name: Verify every hub link resolves
         working-directory: site
         run: |
           missing=0
-          for u in $(grep -oE '(href|src)="games/[^"]*"' src/index.html | sed -E 's/^(href|src)="//; s/"$//' | sort -u); do
+          for u in $(grep -oE '(href|src)="games/[^"]*"' _site/index.html | sed -E 's/^(href|src)="//; s/"$//' | sort -u); do
             if [ ! -f "_site/$u" ]; then
               echo "MISSING: $u"
               missing=1
