@@ -52,6 +52,10 @@ def shot(g):
     return f'<div class="shot ph" aria-hidden="true"><span>{esc(g["emoji"])}</span></div>'
 
 
+def tag_extra(g):
+    return f" · v{g['version']}" if g.get("version") else ""
+
+
 def playable_card(g):
     href = f'{BASE}/{g["dir"]}/{g["entry"]}'
     img = shot(g)
@@ -60,7 +64,7 @@ def playable_card(g):
     return f"""<article class="card">
       {img}
       <div class="body">
-        <div class="title"><h3>{esc(g["emoji"])} {esc(g["title"])}</h3><span class="tag">{esc(g["players"])}</span></div>
+        <div class="title"><h3>{esc(g["emoji"])} {esc(g["title"])}</h3><span class="tag">{esc(g["players"])}{esc(tag_extra(g))}</span></div>
         <p class="blurb">{g["blurb"]}</p>
         <p class="keys">{g["keys"]}</p>
         <p class="cta"><a class="btn" href="{esc(href)}">▶ Play {esc(g["title"])}</a></p>
@@ -73,7 +77,7 @@ def lan_card(g):
     return f"""<article class="card lan">
       {shot(g)}
       <div class="body">
-        <div class="title"><h3>{esc(g["emoji"])} {esc(g["title"])}</h3><span class="tag lan">LAN · :{int(g["port"])}</span></div>
+        <div class="title"><h3>{esc(g["emoji"])} {esc(g["title"])}</h3><span class="tag lan">LAN · :{int(g["port"])}{esc(tag_extra(g))}</span></div>
         <p class="blurb">{g["blurb"]}</p>
         <p class="keys">{g["keys"]}</p>
         <p class="cta"><a class="btn ghost" href="{esc(href)}">How to run</a></p>
