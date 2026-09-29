@@ -5,116 +5,126 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Browser Games — Play instantly</title>
 <meta name="description" content="{{META_DESC}}">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f5a623'/><path d='M38 30l34 20-34 20z' fill='%23241500'/></svg>">
 <style>
   :root {
-    --bg: #0b0e14;
-    --bg-2: #11151f;
-    --card: #161b27;
-    --card-2: #1d2333;
-    --line: #262d40;
-    --fg: #e8ecf5;
-    --muted: #97a1b8;
-    --accent: #4dd4ac;
-    --accent-2: #6aa8ff;
-    --dim: #6f7a92;
-    --radius: 14px;
-    --shadow: 0 10px 30px rgba(0,0,0,.35);
+    --paper: #0e0d0b;
+    --paper-2: #14120e;
+    --card: #171410;
+    --card-2: #1e1a13;
+    --line: #2b251c;
+    --ink: #ece7db;
+    --muted: #a89e8c;
+    --dim: #6f675a;
+    --signal: #f5a623;
+    --signal-ink: #241500;
+    --radius: 8px;
+    --mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body {
     margin: 0;
-    background:
-      radial-gradient(1100px 600px at 12% -8%, #1b2a44 0%, transparent 60%),
-      radial-gradient(900px 500px at 100% 0%, #14332c 0%, transparent 55%),
-      var(--bg);
-    color: var(--fg);
+    background: var(--paper);
+    color: var(--ink);
     font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     min-height: 100vh;
   }
-  a { color: var(--accent-2); }
+  a { color: var(--signal); }
   .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px 72px; }
 
   header.hero { padding: 60px 0 30px; }
   .eyebrow {
-    display: inline-block; font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
-    color: var(--accent); border: 1px solid rgba(77,212,172,.35);
-    background: rgba(77,212,172,.08); border-radius: 999px; padding: 5px 12px; margin-bottom: 18px;
+    display: inline-block; font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--signal); border: 1px solid var(--signal);
+    border-radius: 4px; padding: 5px 12px; margin-bottom: 18px;
   }
   h1 {
-    margin: 0 0 12px; font-size: clamp(2rem, 6vw, 3.2rem); line-height: 1.1;
-    letter-spacing: -.02em; background: linear-gradient(100deg, #fff 20%, #9fe8d2 70%, #8fc0ff 100%);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin: 0 0 12px; font-family: var(--mono); font-weight: 800;
+    font-size: clamp(2rem, 6vw, 3.2rem); line-height: 1.1;
+    letter-spacing: .02em; text-transform: uppercase; color: var(--ink);
   }
+  h1 .acc { color: var(--signal); }
   .lede { margin: 0 0 22px; color: var(--muted); font-size: 1.06rem; max-width: 62ch; }
   .pills { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; list-style: none; }
   .pills li {
-    font-size: 13px; color: var(--muted); background: var(--card);
-    border: 1px solid var(--line); border-radius: 999px; padding: 6px 13px;
+    font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--muted); background: var(--card);
+    border: 1px solid var(--line); border-radius: 4px; padding: 6px 13px;
   }
 
-  h2 { font-size: 1.3rem; margin: 48px 0 6px; letter-spacing: -.01em; }
-  .sec-note { color: var(--muted); margin: 0 0 20px; font-size: .95rem; }
+  h2 {
+    display: flex; align-items: baseline; gap: 12px;
+    font-family: var(--mono); font-size: 1.05rem; letter-spacing: .08em; text-transform: uppercase;
+    margin: 48px 0 6px; padding-bottom: 10px; border-bottom: 1px dashed var(--line);
+  }
+  h2 .n { color: var(--signal); }
+  .sec-note { color: var(--muted); margin: 12px 0 20px; font-size: .95rem; }
 
   .grid { display: grid; gap: 22px; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
 
   .card {
+    position: relative;
     display: flex; flex-direction: column; background: var(--card);
     border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
-    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    transition: border-color .18s ease;
   }
-  .card:hover { transform: translateY(-3px); border-color: #35405c; box-shadow: var(--shadow); }
-  .card:focus-within { border-color: var(--accent); }
-  .shot { display: block; width: 100%; height: auto; background: var(--bg-2); border-bottom: 1px solid var(--line); }
+  .card::after {
+    content: ""; position: absolute; top: 8px; right: 8px; width: 10px; height: 10px;
+    border-top: 2px solid var(--signal); border-right: 2px solid var(--signal); opacity: .65;
+    pointer-events: none;
+  }
+  .card:hover { border-color: #4a3d28; }
+  .card:hover h3 { text-decoration: underline; text-decoration-color: var(--signal); text-underline-offset: 3px; }
+  .card:focus-within { border-color: var(--signal); }
+  .shot { display: block; width: 100%; height: auto; background: var(--paper-2); border-bottom: 1px solid var(--line); }
   .body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
   .title { display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; }
-  .title h3 { margin: 0; font-size: 1.16rem; letter-spacing: -.01em; }
+  .title h3 { margin: 0; font-family: var(--mono); font-size: 1.05rem; letter-spacing: .02em; }
   .tag {
-    font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent);
-    background: rgba(77,212,172,.1); border: 1px solid rgba(77,212,172,.3);
-    border-radius: 999px; padding: 3px 9px; white-space: nowrap;
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--signal);
+    border: 1px solid var(--signal);
+    border-radius: 4px; padding: 3px 9px; white-space: nowrap;
   }
-  .tag.lan { color: var(--dim); background: rgba(111,122,146,.1); border-color: var(--line); }
+  .tag.lan { color: var(--dim); border-color: var(--line); }
   .blurb { margin: 0; color: var(--muted); font-size: .95rem; }
   .keys { margin: 0; font-size: .86rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 12px; margin-top: auto; }
-  .keys b { color: var(--fg); font-weight: 600; }
+  .keys b { color: var(--ink); font-weight: 600; }
   kbd {
-    font: inherit; font-size: .82em; background: var(--card-2); border: 1px solid var(--line);
-    border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; color: var(--fg); white-space: nowrap;
+    font-family: var(--mono); font-size: .82em; background: var(--card-2); border: 1px solid var(--line);
+    border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; color: var(--ink); white-space: nowrap;
   }
   .cta { margin-top: 4px; }
 
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    font: inherit; font-weight: 650; text-decoration: none; cursor: pointer;
-    padding: 12px 20px; border-radius: 10px; border: 1px solid transparent;
-    background: linear-gradient(180deg, #5ee0b8, #33b795); color: #06231b;
-    box-shadow: 0 6px 18px rgba(51,183,149,.25);
+    font-family: var(--mono); font-size: .95rem; letter-spacing: .04em; text-transform: uppercase;
+    font-weight: 700; text-decoration: none; cursor: pointer;
+    padding: 12px 20px; border-radius: 6px; border: 1px solid transparent;
+    background: var(--signal); color: var(--signal-ink);
   }
   .btn:hover { filter: brightness(1.07); }
-  .btn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
-  .btn.ghost { background: transparent; color: var(--muted); border-color: var(--line); box-shadow: none; }
-  .btn.ghost:hover { color: var(--fg); border-color: #3a4560; }
+  .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .btn.ghost { background: transparent; color: var(--muted); border-color: var(--line); }
+  .btn.ghost:hover { color: var(--ink); border-color: #4a3d28; }
 
-  .lan .shot { filter: grayscale(1) brightness(.5); }
   .shot.ph {
     display: flex; align-items: center; justify-content: center; aspect-ratio: 16 / 10;
-    background: linear-gradient(135deg, #1a2130, #10141d);
+    background: var(--paper-2);
   }
-  .shot.ph span { font-size: 3.4rem; filter: grayscale(1) brightness(.6); }
+  .shot.ph span { font-size: 3.4rem; }
   code {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .88em;
-    background: var(--card-2); border: 1px solid var(--line); border-radius: 6px; padding: 2px 6px; color: #b9e8d8;
+    font-family: var(--mono); font-size: .88em;
+    background: var(--card-2); border: 1px solid var(--line); border-radius: 6px; padding: 2px 6px; color: var(--signal);
   }
   .note {
     margin: 22px 0 0; padding: 16px 18px; border: 1px solid var(--line);
-    border-left: 3px solid var(--accent-2); border-radius: 10px; background: var(--card);
+    border-left: 3px solid var(--signal); border-radius: 6px; background: var(--card);
     color: var(--muted); font-size: .93rem;
   }
-  footer { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--dim); font-size: .88rem; }
+  footer { margin-top: 56px; padding-top: 22px; border-top: 1px dashed var(--line); color: var(--dim); font-size: .88rem; }
   footer a { color: var(--muted); }
-  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } .card:hover { transform: none; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
 <body>
@@ -122,7 +132,7 @@
 
   <header class="hero">
     <span class="eyebrow">No download · No install</span>
-    <h1>🎮 Browser Games</h1>
+    <h1>Browser <span class="acc">Games</span></h1>
     <p class="lede">{{LEDE_TOTAL}} tiny games. Pick one and it loads straight into this tab — nothing to install, nothing to download.</p>
     <ul class="pills">
       <li>{{N_PLAYABLE}} playable right here</li>
@@ -132,7 +142,7 @@
     </ul>
   </header>
 
-  <h2>Play in your browser</h2>
+  <h2><span class="n">01</span>Play in your browser</h2>
   <p class="sec-note">These run entirely on this page. Click one and start playing — use your browser's back button to come back.</p>
 
   <div class="grid">
@@ -141,7 +151,7 @@
 
   </div>
 
-  <h2>LAN games</h2>
+  <h2><span class="n">02</span>LAN games</h2>
   <p class="sec-note">These need a tiny Python server as the referee, so they can't run from a static page. Clone the repo, start the server, and everyone on the same Wi-Fi plays.</p>
 
   <div class="grid">
