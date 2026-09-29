@@ -66,7 +66,7 @@
   }
   .card:hover { transform: translateY(-3px); border-color: #35405c; box-shadow: var(--shadow); }
   .card:focus-within { border-color: var(--accent); }
-  .shot { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: contain; background: var(--bg-2); border-bottom: 1px solid var(--line); }
+  .shot { display: block; width: 100%; height: auto; background: var(--bg-2); border-bottom: 1px solid var(--line); }
   .body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
   .title { display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; }
   .title h3 { margin: 0; font-size: 1.16rem; letter-spacing: -.01em; }
@@ -99,7 +99,7 @@
 
   .lan .shot { filter: grayscale(1) brightness(.5); }
   .shot.ph {
-    display: flex; align-items: center; justify-content: center;
+    display: flex; align-items: center; justify-content: center; aspect-ratio: 16 / 10;
     background: linear-gradient(135deg, #1a2130, #10141d);
   }
   .shot.ph span { font-size: 3.4rem; filter: grayscale(1) brightness(.6); }
